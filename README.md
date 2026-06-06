@@ -39,4 +39,4 @@ Dikerjakan oleh teman-teman gokil kita ini :
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-# Thanks
+Thanks
