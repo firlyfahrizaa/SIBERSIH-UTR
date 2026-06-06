@@ -1,16 +1,66 @@
-# React + Vite
+&nbsp;
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-Currently, two official plugins are available:
+## SIBERSIH
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+SIBERSIH (Sistem Informasi Kebersihan Kampus) adalah aplikasi yang dirancang untuk membantu pengelolaan dan pengawasan kebersihan lingkungan kampus secara terintegrasi. Aplikasi ini digunakan oleh petugas kebersihan, admin (satpam), dan bagian Sarana dan Prasarana (Sarpras) untuk mencatat, memantau, serta mengelola aktivitas kebersihan di berbagai area kampus.
 
-## React Compiler
+## Kebutuhan
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ini adalah kebutuhan dasar untuk menjalankan aplikasi dan web SIBERSIH :
 
-## Expanding the ESLint configuration
+- Web : Dapat diakses melalui browser 
+- Aplikasi : (menunggu pengembangan selanjutnya)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Contributors ✨
+
+Dikerjakan oleh teman-teman gokil kita ini :
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bagusjiran"><img src="https://avatars.githubusercontent.com/u/105334973?v=4?s=100" width="100px;" alt="Bagus Jiran"/><br /><sub><b>Bagus Jiran</b></sub></a><br /></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/firlyfahrizaa"><img src="https://avatars.githubusercontent.com/u/150601949?v=4?s=100" width="100px;" alt="Firly Fahriza"/><br /><sub><b>Firly Fahriza</b></sub></a><br /></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yawa-Tori"><img src="https://avatars.githubusercontent.com/u/208153721?v=4?s=100" width="100px;" alt="Mirza Alfarizhi N."/><br /><sub><b>Mirza Alfarizhi N.</b></sub></a><br /></td>
+    </tr>    
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Thanks
+
+<table align="center">
+  <tr>
+    <td align="center" width="150">
+      <a href="https://chat.openai.com/">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/ChatGPT-Logo.svg" width="80px;" alt="ChatGPT"/><br>
+        <sub><b>ChatGPT</b></sub>
+      </a>
+    </td>
+    <td align="center" width="150">
+      <a href="https://gemini.google.com/">
+        <img src="http://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" width="80px;" alt="Gemini"/><br>
+        <sub><b>Gemini</b></sub>
+      </a>
+    </td>
+    <td align="center" width="150">
+      <a href="https://www.youtube.com/">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" width="100px;" alt="YouTube"/><br>
+        <sub><b>YouTube</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+Thanks to <b>ChatGPT</b>, <b>Gemini</b>, and <b>YouTube</b> for helping us learn, build, and find inspiration 🚀
+</p>
