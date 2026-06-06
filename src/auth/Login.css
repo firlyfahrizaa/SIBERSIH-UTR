@@ -1,0 +1,299 @@
+/* Animated Background & Login Mobile Adjustments */
+.abstract-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: floatShape 20s infinite ease-in-out alternate;
+  will-change: transform;
+}
+
+.shape1 {
+  width: 450px;
+  height: 450px;
+  background: rgba(236, 72, 153, 0.6); /* Pink */
+  top: -100px;
+  left: -100px;
+  animation-duration: 8s;
+}
+
+.shape2 {
+  width: 550px;
+  height: 550px;
+  background: rgba(59, 130, 246, 0.6); /* Blue */
+  bottom: -150px;
+  right: -100px;
+  animation-duration: 12s;
+  animation-delay: -2s;
+}
+
+.shape3 {
+  width: 350px;
+  height: 350px;
+  background: rgba(168, 85, 247, 0.5); /* Purple */
+  top: 20%;
+  right: 20%;
+  animation-duration: 9s;
+  animation-delay: -4s;
+}
+
+.shape4 {
+  width: 300px;
+  height: 300px;
+  background: rgba(45, 212, 191, 0.5); /* Teal */
+  bottom: 20%;
+  left: 10%;
+  animation-duration: 10s;
+  animation-delay: -5s;
+}
+
+/* Gerakan animasinya sangat diperlebar (hingga 300px) agar sangat terlihat berterbangan */
+@keyframes floatShape {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(150px, -100px) scale(1.1); }
+  66% { transform: translate(-100px, 150px) scale(0.9); }
+  100% { transform: translate(50px, -50px) scale(1.15); }
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
+  width: 90%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+/* Sembunyikan scrollbar kasar menjadi tipis elegan */
+.login-card::-webkit-scrollbar {
+  width: 5px;
+}
+.login-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+.login-card::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+/* OPTIMASI SAT-SET KHUSUS MOBILE */
+@media (max-width: 768px) {
+  .desktop-only-shape {
+    display: none !important; /* Hapus 2 elemen melayang untuk kurangi beban GPU */
+  }
+  
+  .abstract-shape {
+    filter: blur(25px); /* Kurangi kalkulasi radius blur */
+    opacity: 0.4;
+    animation-duration: 25s !important; /* Perlambat frame per second biar ringan */
+  }
+  
+  .shape1 { width: 250px; height: 250px; }
+  .shape2 { width: 300px; height: 300px; }
+  
+  .login-card {
+    backdrop-filter: none !important; /* Hapus efek kaca buram, ini paling memakan CPU di HP! */
+    background: rgba(255, 255, 255, 0.98) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important; /* Hapus shadow tajam */
+  }
+}
+
+/* EXTRACTED LOGIN COMPONENT STYLES */
+.login-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.login-header {
+  margin-bottom: 30px;
+}
+.text-center { text-align: center; }
+
+.login-logo {
+  font-size: 48px;
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.login-title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.error-alert {
+  background: #fef2f2;
+  color: #ef4444;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #fecaca;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group-login {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label-login {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.form-input-login {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.form-input-login:focus {
+  border-color: #667eea;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-password {
+  padding-right: 40px;
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-login-submit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: opacity 0.2s;
+}
+.btn-login-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.login-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 14px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.link-primary {
+  color: #667eea;
+  cursor: pointer;
+  font-weight: 500;
+}
+.link-warning {
+  color: #f59e0b;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.reset-modal {
+  margin-top: 20px;
+  padding: 20px;
+  background: #fffbeb;
+  border-radius: 12px;
+  border: 1px solid #fbbf24;
+}
+.reset-modal-title {
+  margin: 0 0 5px 0;
+  color: #92400e;
+  font-size: 16px;
+}
+.reset-modal-desc {
+  margin: 0 0 15px 0;
+  color: #a16207;
+  font-size: 13px;
+}
+.reset-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.reset-btn-group {
+  display: flex;
+  gap: 10px;
+}
+.btn-reset-submit {
+  flex: 1;
+  padding: 10px;
+  background: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+.btn-reset-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.btn-reset-cancel {
+  padding: 10px 15px;
+  background: white;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}

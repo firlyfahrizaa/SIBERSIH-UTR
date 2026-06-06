@@ -1,0 +1,133 @@
+/**
+ * Global Styles dan Utilities
+ * Contains reset styles, variables, dan utility classes
+ */
+
+/* ===== CSS VARIABLES ===== */
+:root {
+  --primary: #667eea;
+  --primary-dark: #764ba2;
+  --secondary: #2c3e50;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --bg-light: #f4f7f6;
+  --bg-white: #ffffff;
+  --text-dark: #2c3e50;
+  --text-muted: #7f8c8d;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --radius: 8px;
+  --transition: all 0.3s ease;
+  --surface: #ffffff;
+  --text-main: #2c3e50;
+  --bg-color: #f8fafc;
+}
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 { font-size: 28px; }
+h2 { font-size: 24px; }
+h3 { font-size: 18px; }
+h4 { font-size: 16px; }
+h5 { font-size: 14px; }
+h6 { font-size: 12px; }
+
+p {
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
+
+.p-10 { padding: 10px; }
+.p-20 { padding: 20px; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: var(--text-muted); }
+
+.flex { display: flex; }
+.flex-center { display: flex; justify-content: center; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+.gap-10 { gap: 10px; }
+.gap-20 { gap: 20px; }
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* ===== RESPONSIVE TYPOGRAPHY ===== */
+@media (max-width: 768px) {
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; }
+  h3 { font-size: 16px; }
+  h4 { font-size: 14px; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 18px; }
+  h2 { font-size: 16px; }
+  h3 { font-size: 14px; }
+  h4 { font-size: 12px; }
+}
