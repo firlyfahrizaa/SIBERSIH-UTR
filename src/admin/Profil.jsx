@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card } from '../components/common';
-import { supabase, supabaseAdmin } from '../supabaseClient';
+import { supabase, apiCall } from '../supabaseClient';
 import { IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 
 function Profil() {
@@ -40,24 +40,29 @@ function Profil() {
     if (user && !authErr) {
       setUserId(user.id);
       
-      const client = supabaseAdmin || supabase;
-      const { data, error } = await client
-        .from('pengguna')
-        .select('*')
-        .eq('auth_id', user.id)
-        .single();
-        
-      if (data && !error) {
-        setProfileData({
-          nama: data.nama || '',
-          email: data.email || '',
-          role: data.role || '',
-          alamat: data.alamat || '',
-          nomor_telepon: data.nomor_telepon || '',
-          jenis_kelamin: data.jenis_kelamin === null ? true : data.jenis_kelamin,
-        });
-      } else {
-        // Fallback jika tidak ada record di tabel pengguna
+      try {
+        const result = await apiCall(`/api/admin/pengguna?auth_id=${user.id}`);
+        const data = result.data;
+          
+        if (data) {
+          setProfileData({
+            nama: data.nama || '',
+            email: data.email || '',
+            role: data.role || '',
+            alamat: data.alamat || '',
+            nomor_telepon: data.nomor_telepon || '',
+            jenis_kelamin: data.jenis_kelamin === null ? true : data.jenis_kelamin,
+          });
+        } else {
+          setProfileData(prev => ({
+            ...prev,
+            nama: user.user_metadata?.nama || user.email.split('@')[0],
+            email: user.email,
+            role: user.user_metadata?.role || 'Pengguna'
+          }));
+        }
+      } catch {
+        // Fallback jika API gagal
         setProfileData(prev => ({
           ...prev,
           nama: user.user_metadata?.nama || user.email.split('@')[0],
@@ -83,38 +88,23 @@ function Profil() {
     setSaving(true);
     
     try {
-      // Update email di layer autentikasi bila di-edit (Admin API = langsung aktif, tanpa konfirmasi email)
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user && user.email !== profileData.email) {
-        if (!supabaseAdmin) throw new Error('Admin client tidak tersedia untuk mengubah email. Hubungi administrator.');
-        const { error: updateAuthErr } = await supabaseAdmin.auth.admin.updateUserById(
-          userId,
-          { email: profileData.email, email_confirm: true }
-        );
-        if (updateAuthErr) throw new Error("Gagal mengubah email autentikasi: " + updateAuthErr.message);
-      }
-
-      // Update data ke Supabase menggunakan Admin client untuk bypass RLS (Gunakan auth_id sebagai sasaran)
-      const adminClient = supabaseAdmin || supabase;
-      const { error } = await adminClient
-        .from('pengguna')
-        .update({
-          nama: profileData.nama,
+      // Update email Auth + data pengguna via API route
+      await apiCall('/api/admin/update-user', {
+        method: 'POST',
+        body: {
+          auth_id: userId,
           email: profileData.email,
+          nama: profileData.nama,
           alamat: profileData.alamat,
           nomor_telepon: profileData.nomor_telepon,
-          jenis_kelamin: profileData.jenis_kelamin
-        })
-        .eq('auth_id', userId);
+          jenis_kelamin: profileData.jenis_kelamin,
+        },
+      });
 
-      if (error) {
-        throw new Error('Gagal mencetak rekam jejak identitas: ' + error.message);
-      } else {
-        setIsEditing(false);
-        alert('Identitas Diri berhasil diperbarui secara menyeluruh!');
-        // Beritahu Topbar untuk memuat ulang namanya
-        window.dispatchEvent(new Event('profileUpdated'));
-      }
+      setIsEditing(false);
+      alert('Identitas Diri berhasil diperbarui secara menyeluruh!');
+      // Beritahu Topbar untuk memuat ulang namanya
+      window.dispatchEvent(new Event('profileUpdated'));
     } catch (error) {
       alert(error.message);
     }

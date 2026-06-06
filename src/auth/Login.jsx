@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase, supabaseAdmin } from '../supabaseClient';
+import { supabase, apiCall } from '../supabaseClient';
 import { FaRecycle, FaKey } from 'react-icons/fa';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import './Login.css';
@@ -70,20 +70,11 @@ const Login = () => {
 
     try {
       // 1. Verifikasi identitas: Cek apakah Email dan NIP cocok di tabel pengguna
-      // Menggunakan supabaseAdmin karena user belum login (anon key diblokir RLS)
-      if (!supabaseAdmin) {
-        throw new Error('Fitur reset password belum tersedia di lingkungan ini. Hubungi administrator.');
-      }
-      const { data: pengguna, error: dbErr } = await supabaseAdmin
-        .from('pengguna')
-        .select('nip, email')
-        .eq('email', email)
-        .single();
-
-      // Jika email tidak ada di database atau NIP yang diinput tidak sama dengan di database
-      if (dbErr || !pengguna || String(pengguna.nip) !== String(nip)) {
-        throw new Error('Kombinasi Email dan NIP tidak ditemukan atau tidak sesuai.');
-      }
+      // Memanggil API route server-side (tanpa auth karena user belum login)
+      await apiCall('/api/auth/verify-identity', {
+        method: 'POST',
+        body: { email, nip },
+      });
 
       // 2. Jika cocok, kirim email reset password via SMTP
       const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email, {

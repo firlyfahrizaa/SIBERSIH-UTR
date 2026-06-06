@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, TablePagination } from '../components/common';
 import { FaEdit, FaUserPlus, FaTrash, FaPlus, FaTimes, FaSave } from 'react-icons/fa';
 import { usePagination } from '../hooks/usePagination';
-import { supabase, supabaseAdmin } from '../supabaseClient';
+import { supabase, apiCall } from '../supabaseClient';
 
 import { IoPersonSharp } from "react-icons/io5";
 
@@ -71,15 +71,11 @@ function ManajemenPetugas() {
   const fetchPetugas = async () => {
     setLoading(true);
     try {
-      // Menggunakan supabaseAdmin untuk bypass RLS, agar bisa melihat semua data pengguna.
-      if (!supabaseAdmin) throw new Error('Admin client tidak tersedia. Hubungi administrator.');
-      const { data, error } = await supabaseAdmin
-        .from('pengguna')
-        .select('*');
+      // Mengambil seluruh data pengguna via API route (bypass RLS di server-side)
+      const result = await apiCall('/api/admin/pengguna');
+      const data = result.data;
 
-      if (error) {
-        console.error('Error fetching pengguna:', error);
-      } else if (data) {
+      if (data) {
         const filteredData = data.filter(p => {
           // Sembunyikan data diri sendiri dari tabel (mencegah penghapusan akun sendiri)
           if (myAuthIdRef.current && p.auth_id === myAuthIdRef.current) return false;
@@ -87,10 +83,8 @@ function ManajemenPetugas() {
           const roleVal = String(p.role || 'petugas').toLowerCase();
 
           if (roleRef.current.includes('kepegawaian')) {
-            // Kepegawaian (Superuser Teratas): Lihat Admin, Petugas, dan Sesama Kepegawaian
             return true;
           } else {
-            // Admin (Superuser Kedua): HANYA bisa lihat dan mengelola Petugas
             return roleVal.includes('petugas');
           }
         });
@@ -171,58 +165,45 @@ function ManajemenPetugas() {
     setFormLoading(true);
 
     try {
-      if (!supabaseAdmin) throw new Error('Admin client tidak tersedia. Hubungi administrator.');
-
       if (isEditing) {
-        // Sinkronisasi update kredensial / email di server Auth
-        if (currentAuthId && formData.email) {
-          const { error: errUpdateEmail } = await supabaseAdmin.auth.admin.updateUserById(currentAuthId, { email: formData.email });
-          if (errUpdateEmail) throw errUpdateEmail;
-        }
-
-        // Mode UPDATE: Ubah data di tabel pengguna (Gunakan Admin untuk bypass RLS)
-        const { error: updateError } = await supabaseAdmin
-          .from('pengguna')
-          .update({
-            nama: formData.nama,
-            nip: formData.nip, // Hati-hati mengubah PK (Pastikan ada ON UPDATE CASCADE di DB jika tabel terhubung)
+        // Mode UPDATE: Kirim ke API route untuk update auth email + data pengguna
+        await apiCall('/api/admin/update-user', {
+          method: 'POST',
+          body: {
+            auth_id: currentAuthId,
+            nip: currentId,
             email: formData.email,
+            nama: formData.nama,
             alamat: formData.alamat,
             nomor_telepon: formData.nomor_telepon,
             role: formData.role,
             jenis_kelamin: String(formData.jenis_kelamin) === 'true',
-          })
-          .eq('nip', currentId);
-
-        if (updateError) throw updateError;
+          },
+        });
 
         await fetchPetugas();
         closeModal();
         setTimeout(() => alert('Data berhasil diperbarui!'), 100);
       } else {
-        // Mode TAMBAH: Bikin Auth User Dulu via Admin Client
+        // Mode TAMBAH: Kirim ke API route untuk membuat Auth user baru
         const defaultPassword = 'Petugas' + formData.nip;
 
-        const { data: newUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-          email: formData.email,
-          password: defaultPassword,
-          email_confirm: true,
-          user_metadata: {
+        await apiCall('/api/admin/create-user', {
+          method: 'POST',
+          body: {
+            email: formData.email,
+            password: defaultPassword,
             nama: formData.nama,
             role: formData.role,
             nip: formData.nip,
             alamat: formData.alamat,
             nomor_telepon: formData.nomor_telepon,
-            jenis_kelamin: String(formData.jenis_kelamin) === 'true'
-          }
+            jenis_kelamin: String(formData.jenis_kelamin) === 'true',
+          },
         });
-
-        if (authError) throw authError;
 
         // Tunggu sedikit agar trigger DB punya waktu membuat baris
         await new Promise(resolve => setTimeout(resolve, 800));
-
-        // Note: Update tambahan dihilangkan karena asuransi terbaik adalah menangkapnya via Trigger DB.
 
         await fetchPetugas();
         closeModal();
@@ -247,10 +228,12 @@ function ManajemenPetugas() {
 
     setLoading(true);
     try {
-      // Hapus Auth User menggunakan Admin Client (Otomatis Cascade Hapus DB Pengguna jika constraint ada, atau hapus spesifik)
+      // Hapus Auth User via API route
       if (auth_id) {
-        const { error: errorDelAuth } = await supabaseAdmin.auth.admin.deleteUser(auth_id);
-        if (errorDelAuth) throw errorDelAuth;
+        await apiCall('/api/admin/delete-user', {
+          method: 'POST',
+          body: { auth_id },
+        });
       }
 
       // Hapus di tabel Pengguna secara manual jika Cascade tidak nyala
